@@ -1,20 +1,21 @@
 #!/bin/bash
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-# File name: diy-part1.sh
-# Description: OpenWrt DIY script part 1 (Before Update feeds)
-#
-# Copyright (c) 2019-2024 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
+set -e
 
-# Uncomment a feed source
-#sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
+echo "==> Clean feeds"
+./scripts/feeds clean
 
-# Add a feed source
-#echo 'src-git helloworld https://github.com/fw876/helloworld' >>feeds.conf.default
-#echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall' >>feeds.conf.default
-# 使用官方核心，避免 helloworld 的 gn 依赖
-rm -rf feeds/helloworld/{xray-core,gn,v2ray-core,sing-box}
+echo "==> Update feeds"
+./scripts/feeds update base packages luci routing telephony
+./scripts/feeds update helloworld
+
+echo "==> Remove helloworld packages that pull host gn"
+rm -rf feeds/helloworld/gn
+rm -rf feeds/helloworld/v2ray-core
+rm -rf feeds/helloworld/sing-box
+rm -rf feeds/helloworld/naiveproxy
+rm -rf feeds/helloworld/hysteria
+
+echo "==> Install required packages only"
+./scripts/feeds install luci-app-ssr-plus
+
+echo "==> Done"
