@@ -69,7 +69,7 @@ jobs:
         chmod +x $DIY_P1_SH
         cd openwrt
         # SSR Plus
-        git clone https://github.com/fw876/helloworld.git package/helloworld
+        git clone --depth=1 https://github.com/fw876/helloworld.git package/helloworld
         cd package/helloworld
         git checkout <commit>
         cd ../..
